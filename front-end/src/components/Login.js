@@ -83,7 +83,7 @@ export class Login extends React.Component{
            {headers:{"Content-ype":"application/json"}})
             .then(response => {
                 console.log(response.data);
-                localStorage.setItem('token',response.data.accessToken);
+                localStorage.setItem('token', "Bearer "+response.data.accessToken);
                 localStorage.setItem("isLoggedIn",true);
                 localStorage.setItem("username","test");
                 localStorage.setItem("email",this.state.email);
