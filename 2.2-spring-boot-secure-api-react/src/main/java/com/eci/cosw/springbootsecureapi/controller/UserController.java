@@ -5,10 +5,7 @@ import com.eci.cosw.springbootsecureapi.service.UserService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
 import java.util.Date;
@@ -19,6 +16,7 @@ import java.util.Date;
  */
 @RestController
 @RequestMapping( "user" )
+@CrossOrigin(origins = "*")
 public class UserController
 {
 
@@ -29,35 +27,26 @@ public class UserController
     public Token login( @RequestBody User login )
         throws ServletException
     {
-
+        System.out.println("hola");
         String jwtToken = "";
 
-        if ( login.getUsername() == null || login.getPassword() == null )
+        if ( login.getEmail() == null || login.getPassword() == null )
         {
             throw new ServletException( "Please fill in username and password" );
         }
 
-        String username = login.getUsername();
+        String username = login.getEmail();
         String password = login.getPassword();
 
         //TODO implement logic to verify user credentials
         User user = userService.getUser( 0l );
-
-        if ( user == null )
-        {
-            throw new ServletException( "User username not found." );
-        }
-
-        String pwd = user.getPassword();
-
-        if ( !password.equals( pwd ) )
-        {
-            throw new ServletException( "Invalid login. Please check your name and password." );
+        if(!user.getEmail().equals(username) || !user.getPassword().equals(password)){
+            throw new ServletException( "The username or the password are incorrects. Please check" );
+        }else{
+            jwtToken = Jwts.builder().setSubject( username ).claim( "roles", "user" ).setIssuedAt( new Date() ).signWith(
+                    SignatureAlgorithm.HS256, "secretkey" ).compact();
         }
         //
-        jwtToken = Jwts.builder().setSubject( username ).claim( "roles", "user" ).setIssuedAt( new Date() ).signWith(
-            SignatureAlgorithm.HS256, "secretkey" ).compact();
-
         return new Token( jwtToken );
     }
 
