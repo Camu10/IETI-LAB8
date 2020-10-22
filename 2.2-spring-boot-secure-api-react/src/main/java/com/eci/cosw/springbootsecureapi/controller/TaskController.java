@@ -24,9 +24,7 @@ public class TaskController {
         try{
             stats = Unirest.get("https://ietilab7-task-api.azurewebsites.net/api/add-task?code=okVaEA9KV89dsB4Q9uG66sRVffDIUfmz4ngK8JV745IzUqY24VuJLw==")
                     .asString().getBody();
-
             task = gson.fromJson(stats,new TypeToken<List<Task>>(){}.getType());
-            System.out.println(task);
             return new ResponseEntity<>(task, HttpStatus.ACCEPTED);
         }catch (Exception e){
             e.printStackTrace();

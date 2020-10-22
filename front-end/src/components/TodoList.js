@@ -21,9 +21,7 @@ export class TodoList extends React.Component {
             console.log(error)
         })
     };
-  	
-
-
+ 
     render() {
         const todoList = this.state.todoList.map((todo, i) => {
             return (
